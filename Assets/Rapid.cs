@@ -6,11 +6,7 @@ public class Rapid : MonoBehaviour {
 
     Vector2 target;
     Rigidbody2D rb;
-    Character character;
     GameObject targetG;
-
-    public AudioClip[] ExplosionAudio;
-    public AudioSource audio;
 
     public float speed;
 
@@ -18,8 +14,7 @@ public class Rapid : MonoBehaviour {
 
         rb = GetComponent<Rigidbody2D>();
 
-        targetG = GameObject.FindWithTag("Player");
-        character = targetG.GetComponent<Character>();
+        targetG = Character.Instance.gameObject;
 
         target = targetG.transform.position;
         Vector2 dir = target - rb.position;
@@ -38,20 +33,13 @@ public class Rapid : MonoBehaviour {
     {
         if (col.tag == "Player")
         {
-            character.GameOver();
+            Manager.Instance.GameOver();
         }
         else
         {
             //폭발 둘다 모션 두번 폭발음
-            StartCoroutine(Explosion());
+            Manager.Instance.SFX(3);
+            gameObject.SetActive(false);
         }
-    }
-
-    IEnumerator Explosion()
-    {
-        yield return new WaitForSeconds(Random.Range(0f, 0.3f));
-        audio.PlayOneShot(ExplosionAudio[Random.Range(0, 2)]);
-        yield return new WaitForSeconds(0.5f);
-        Destroy(gameObject);
     }
 }

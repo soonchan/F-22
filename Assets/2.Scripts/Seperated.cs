@@ -7,11 +7,7 @@ public class Seperated : MonoBehaviour {
     Character character;
     Vector2 dir;
     Rigidbody2D rb;
-    bool fly = false;
 
-    public AudioClip SeperatedAudio;
-    public AudioClip ExplosionAudio;
-    public AudioSource audio;
 
     public float speed;
 
@@ -25,16 +21,13 @@ public class Seperated : MonoBehaviour {
     {
         if (col.tag == "Player")
         {
-            character.GameOver();
-        }
-        else if ((col.tag == "SeperateMissile" || col.tag == "SeperatedMissile") && fly)
-        {
-            //폭발 둘다 모션 두번 폭발음
-            StartCoroutine(Explosion());
+            Manager.Instance.GameOver();
         }
         else
         {
-            StartCoroutine(Explosion());
+            //폭발 둘다 모션 두번 폭발음
+            Manager.Instance.SFX(1);
+            gameObject.SetActive(false);
         }
     }
 
@@ -42,11 +35,7 @@ public class Seperated : MonoBehaviour {
 
     public void SeperateLaunch(int i, Vector2 target)
     {
-        rb = GetComponent<Rigidbody2D>();
         dir = target.normalized;
-
-        //StartCoroutine(Flight());
-        StartCoroutine(flyCheck());
 
         switch (i)
         {
@@ -67,26 +56,11 @@ public class Seperated : MonoBehaviour {
         rb.velocity = transform.up * speed;
     }
 
-    IEnumerator Explosion()
-    {
-        yield return new WaitForSeconds(Random.Range(0f, 0.3f));
-        audio.PlayOneShot(SeperatedAudio);
-        yield return new WaitForSeconds(0.5f);
-        Destroy(gameObject);
-    }
 
     IEnumerator Flight()
     {
-        while(true)
-        {
-
-            yield return null;
-        }
-    }
-
-    IEnumerator flyCheck()
-    {
-        yield return new WaitForSeconds(0.5f);
-        fly = true;
+        yield return new WaitForSeconds(5);
+        Manager.Instance.SFX(1);
+        gameObject.SetActive(false);
     }
 }
